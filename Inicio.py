@@ -5,11 +5,12 @@ import pandas as pd
 
 st.set_page_config(
     page_title="Inicio",
-    page_icon=Image.open('./assets/favicon-32x32.png'),
+    page_icon=Image.open('./assets/q.png'),
     layout="wide",
     initial_sidebar_state="auto",
     menu_items=None,
 )
+st.image(Image.open('./assets/logo_qcf_streamlit.png'), width=500)
 
 st.title("¿Qué puedes construir con qcfinancial?")
 st.subheader("Esta es una colección de ejemplos de uso")

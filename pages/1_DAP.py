@@ -7,11 +7,13 @@ from modules import dap
 
 st.set_page_config(
     page_title="New Operation",
-    page_icon=Image.open('./assets/favicon-32x32.png'),
+    page_icon=Image.open('./assets/q.png'),
     layout="wide",
     initial_sidebar_state="auto",
     menu_items=None,
 )
+
+st.image(Image.open('./assets/logo_qcf_streamlit.png'), width=500)
 
 st.title("DAP")
 st.markdown("""En este ejemplo se utilizan los objetos:
@@ -77,5 +79,4 @@ def simulate(monto: float, plazo: int, moneda: qcf.QCCLP | qcf.QCCLF):
         "plazo": plazo_real,
         "tipo_tasa": tipo_tasa,
     }""",
-    )
-
+               )
