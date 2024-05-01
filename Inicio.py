@@ -20,7 +20,7 @@ st.write("La tabla siguiente muestra el roadmap. A medida que se completen, "
 col1, col2 = st.columns(2)
 
 roadmap = [
-    {"Nombre": "DAP", "Descripción": "Valorización de un depósito a plazo", "Status": "⚠️"},
+    {"Nombre": "DAP", "Descripción": "Valorización de un depósito a plazo", "Status": "️✅"},
     {"Nombre": "BTU y BTP", "Descripción": "Valorización de renta fija chilena", "Status": "⚠️"},
 ]
 
