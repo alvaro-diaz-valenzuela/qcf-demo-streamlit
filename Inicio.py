@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import pandas as pd
 
+
 st.set_page_config(
     page_title="Inicio",
     page_icon=Image.open('./assets/favicon-32x32.png'),
