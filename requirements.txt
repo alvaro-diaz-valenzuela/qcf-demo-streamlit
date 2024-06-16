@@ -54,4 +54,4 @@ tzdata==2024.1
 urllib3==2.2.1
 xlrd==2.0.1
 XlsxWriter==3.2.0
-qcfinancial==0.7.3
+qcfinancial==0.11.0

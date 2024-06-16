@@ -6,7 +6,7 @@ import qcfinancial as qcf
 from modules import btp_btu
 
 st.set_page_config(
-    page_title="New Operation",
+    page_title="BTP y BTU",
     page_icon=Image.open('./assets/q.png'),
     layout="wide",
     initial_sidebar_state="auto",

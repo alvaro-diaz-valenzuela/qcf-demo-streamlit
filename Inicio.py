@@ -10,6 +10,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
     menu_items=None,
 )
+
 st.image(Image.open('./assets/logo_qcf_streamlit.png'), width=500)
 
 st.title("¿Qué puedes construir con qcfinancial?")
