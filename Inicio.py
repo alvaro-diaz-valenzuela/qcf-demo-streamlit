@@ -26,7 +26,7 @@ roadmap = [
     {"Nombre": "BTU y BTP", "Descripción": "Valorización de renta fija chilena", "Status": "✅ "},
     {"Nombre": "FX Forward", "Descripción": "Valorización de un forward USDCLP", "Status": "⚠️"},
     {"Nombre": "Crédito ICPCLP", "Descripción": "Alta y Devengo de un Crédito ICPCLP", "Status": "⚠️"},
-    {"Nombre": "Swap ICPCLP", "Descripción": "Alta y Valorización de un Swap ICPCLP", "Status": "⚠️"},
+    {"Nombre": "Swap ICPCLP", "Descripción": "Alta y Valorización de un Swap ICPCLP", "Status": "✅ ⚠️"},
     {"Nombre": "CCS Fija CLF vs ICPCLP", "Descripción": "Alta y Valorización de un CCS CLFCLP Estándar",
      "Status": "⚠️"},
     {"Nombre": "Sens. Swap ICPCLP", "Descripción": "Sensibilidad a la curva cero de un Swap ICPCLP", "Status": "⚠️"},
