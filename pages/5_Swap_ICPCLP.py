@@ -21,8 +21,8 @@ st.markdown("""En este ejemplo se utilizan los objetos:
 - `QCInterestRate`
 - `BusinessCalendar`
 - `LegFactory`
-- `QCFixedRateCashflow`
-- `QCOvernightIndexCashflow`
+- `FixedRateCashflow`
+- `OvernightIndexCashflow`
 
 Se construye una operación Swap de tasa fija vs ICPCLP con las convenciones usuales del mercado chileno.
 """)

@@ -21,8 +21,8 @@ st.markdown("""En este ejemplo se utilizan los objetos:
 - `QCInterestRate`
 - `BusinessCalendar`
 - `LegFactory`
-- `QCFixedRateCashflow`
-- `QCChileanFixedRateBond`
+- `FixedRateCashflow`
+- `ChileanFixedRateBond`
 
 Se valoriza a TIR de mercado según las convenciones de la Bolsa de Comercio de Santiago.
 """)
