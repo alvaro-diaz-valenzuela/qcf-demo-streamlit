@@ -24,7 +24,8 @@ st.markdown("""En este ejemplo se utilizan los objetos:
 - `FixedRateCashflow`
 - `OvernightIndexCashflow`
 
-Se construye una operación Swap de tasa fija vs ICPCLP con las convenciones usuales del mercado chileno.
+Se construye una operación cross currency swap de tasa fija UF vs ICPCLP con las convenciones usuales del mercado 
+chileno.
 """)
 st.write("---")
 
@@ -34,7 +35,7 @@ both_default_values = {
     "bus_adj_rule": qcf.BusyAdjRules.MODFOLLOW,
     "settlement_calendar": qcf.BusinessCalendar(trade_date, 20),
     "settlement_lag": 1,
-    "amort_is_cashflow": False,
+    "amort_is_cashflow": True,
     "sett_lag_behaviour": qcf.SettLagBehaviour.DONT_MOVE
 }
 
@@ -46,13 +47,17 @@ icpclp_default_values = {
     "dates_for_eq_rate": qcf.DatesForEquivalentRate.ACCRUAL,
     "interest_rate": qcf.QCInterestRate(.0, qcf.QCAct360(), qcf.QCLinearWf()),
     "eq_rate_decimal_places": 4,
+    "spread": 0.0,
+    "gearing": 1.0,
+    "index_name": "ICPCLP",
 }
+
 clf = qcf.QCCLF()
 clp = qcf.QCCLP()
-usdclp = qcf.FXRate(clf, clp)
+clfclp = qcf.FXRate(clf, clp)
 one_d = qcf.Tenor('0D')
 uf = qcf.FXRateIndex(
-    usdclp,
+    clfclp,
     'UF',
     one_d,
     one_d,
@@ -82,15 +87,42 @@ meses = maturity.get_months() + 12 * maturity.get_years()
 end_date = start_date.add_months(meses)
 st.write(f"End Date:\n {end_date}")
 
-initial_notional = float(st.number_input("Notional", min_value=1_000_000, step=1_000_000))
+initial_notional = float(st.number_input("Notional (UF)", min_value=1_000.00, step=1_000.00))
+fx_rate = float(st.number_input("FX Rate (CLFCLP)", min_value=30_000.00, step=100.00))
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.write(f"Notional in CLF: {initial_notional:,.2f}")
+with col2:
+    st.write(f"FX Rate: {fx_rate:,.2f}")
+with col3:
+    st.write(f"Notional in CLP: {initial_notional * fx_rate:,.2f}")
 
 fixed_rate_value = st.number_input("Fixed Rate Value (%)", step=.0001, format="%0.4f")
 
+
+def fixed_rate_side_callback():
+    st.session_state['icp_rate_side'] = 'Pay' if st.session_state['fixed_rate_side'] == 'Receive' else 'Receive'
+
+
+def icp_rate_side_callback():
+    st.session_state['fixed_rate_side'] = 'Pay' if st.session_state['icp_rate_side'] == 'Receive' else 'Receive'
+
+
 col1, col2 = st.columns(2)
 with col1:
-    fixed_rate_side = st.selectbox("Fixed Rate Side", options=["Receive", "Pay"])
+    fixed_rate_side = st.selectbox(
+        "Fixed Rate Side",
+        options=["Receive", "Pay"],
+        key='fixed_rate_side',
+        on_change=fixed_rate_side_callback,
+    )
 with col2:
-    icp_rate_side = st.selectbox("ICPCLP Rate Side", options=["Pay", "Receive"])
+    icp_rate_side = st.selectbox(
+        "ICPCLP Rate Side",
+        options=["Pay", "Receive"],
+        key='icp_rate_side',
+        on_change=icp_rate_side_callback,
+    )
 
 settlement_periodicity = qcf.Tenor('2Y') if str_maturity in ['1M', '2M', '3M', '6M', '9M', '12M', '1Y', '18M'] else qcf.Tenor('6M')
 if fixed_rate_side == 'Receive':
@@ -114,14 +146,10 @@ fixed_rate_leg_other_values = {
 
 icpclp_leg_other_values = {
     "rec_pay": icp_rec_pay,
-    "initial_notional": initial_notional,
+    "initial_notional": initial_notional * fx_rate,
     "start_date": start_date,
     "end_date": end_date,
     "settlement_periodicity": settlement_periodicity,
-    "interest_rate": qcf.QCInterestRate(0.0, qcf.QCAct360(), qcf.QCLinearWf()),
-    "index_name": "ICPCLP",
-    "spread": 0.0,
-    "gearing": 1.0,
 }
 
 fixed_rate_leg = qcf.LegFactory.build_bullet_fixed_rate_mccy_leg(
