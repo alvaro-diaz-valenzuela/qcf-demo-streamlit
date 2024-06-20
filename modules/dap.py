@@ -1,10 +1,8 @@
 import qcfinancial as qcf
 from datetime import date
 
-tasa = .01
 
-
-def simulate(monto: float, plazo: int, moneda: qcf.QCCLP | qcf.QCCLF):
+def simulate(monto: float, plazo: int, moneda: qcf.QCCLP | qcf.QCCLF, tasa: float):
     hoy = date.today()
     qcf_hoy = qcf.QCDate(hoy.day, hoy.month, hoy.year)
     scl = qcf.BusinessCalendar(qcf_hoy, 2)
