@@ -31,12 +31,12 @@ st.write("---")
 trade_date = qcf.QCDate(14, 6, 2024)
 
 both_default_values = {
-    "bus_adj_rule": qcf.BusyAdjRules.MODFOLLOW,
+    "bus_adj_rule": qcf.BusyAdjRules.MODFOLLOW,  # "MOD_FOLLOW"
     "settlement_calendar": qcf.BusinessCalendar(trade_date, 20),
     "settlement_lag": 1,
     "amort_is_cashflow": False,
     "notional_currency": qcf.QCCLP(),
-    "sett_lag_behaviour": qcf.SettLagBehaviour.DONT_MOVE
+    "sett_lag_behaviour": qcf.SettLagBehaviour.DONT_MOVE,
 }
 
 icpclp_default_values = {
@@ -50,8 +50,10 @@ icpclp_default_values = {
 
 fixed_rate_default_values = {
     "settlement_stub_period": qcf.StubPeriod.NO,
-    "is_bond":False,
+    "is_bond": False,
 }
+
+
 tenors = ['1M', '2M', '3M', '6M', '9M', '1Y', '18M'] + [f"{n}Y" for n in range(2, 11)]
 tenors += ['12Y', '15Y', '20Y', '25Y', '30Y']
 
@@ -105,7 +107,7 @@ icpclp_leg_other_values = {
     "interest_rate": qcf.QCInterestRate(0.0, qcf.QCAct360(), qcf.QCLinearWf()),
     "index_name": "ICPCLP",
     "spread": 0.0,
-    "gearing": 1.0,
+    "gearing": 1.0,  # Spread multiplicativo. fixing * gearing + spread = tasa_final
 }
 
 fixed_rate_leg = qcf.LegFactory.build_bullet_fixed_rate_leg(
