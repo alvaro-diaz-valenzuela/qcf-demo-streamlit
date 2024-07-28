@@ -1,4 +1,5 @@
 import qcfinancial as qcf
+import holidays as hol
 import pandas as pd
 
 format_dict = {
@@ -35,3 +36,23 @@ def leg_as_dataframe(leg: qcf.Leg):
     tabla = [qcf.show(leg.get_cashflow_at(i)) for i in range(0, leg.size())]
     df = pd.DataFrame(tabla, columns=qcf.get_column_names(type_cashflows, ''))
     return df
+
+
+def get_business_calendar(which_holidays: str, years: range) -> qcf.BusinessCalendar:
+    """
+    Retorna un calendario en formato qcfinancial.
+    """
+    py_cal = hol.country_holidays(which_holidays, years=years)
+    yrs = [y for y in years]
+    qcf_cal = qcf.BusinessCalendar(qcf.QCDate(1, 1, yrs[0]), yrs[-1] - yrs[0])
+    for d in py_cal.keys():
+        qcf_cal.add_holiday(qcf.QCDate(d.isoformat()))
+    if which_holidays == 'CL':
+        for year in years:
+            d = qcf.QCDate(31, 12, year)
+            if d.week_day() == qcf.WeekDay.SAT:
+                d = d.add_days(-1)
+            if d.week_day() == qcf.WeekDay.SUN:
+                d = d.add_days(-2)
+            qcf_cal.add_holiday(d)
+    return qcf_cal
