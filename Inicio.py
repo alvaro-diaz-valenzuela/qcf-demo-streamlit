@@ -25,6 +25,11 @@ roadmap = [
     {"Nombre": "DAP", "Descripción": "Valorización de un depósito a plazo", "Status": "️✅"},
     {"Nombre": "BTU y BTP", "Descripción": "Valorización de renta fija chilena", "Status": "✅ "},
     {"Nombre": "FX Forward", "Descripción": "Valorización de un forward USDCLP", "Status": "⚠️"},
+    {"Nombre": "FixedRateLeg", "Descripción": "Demo de la construcción de una pata fija", "Status": "✅ "},
+    {"Nombre": "FixedRateMccyLeg", "Descripción": "Demo de la construcción de una pata fija MultiCurrency", "Status": "✅ "},
+    {"Nombre": "IborLeg", "Descripción": "Demo de la construcción de una pata Ibor", "Status": "✅ "},
+    {"Nombre": "OvernightIndexLeg", "Descripción": "Demo de la construcción de una pata con índice overnight", "Status": "✅ "},
+    {"Nombre": "CompoundedOvernightRateLeg", "Descripción": "Demo de la construcción de una pata con tasa overnight", "Status": "✅ "},
     {"Nombre": "Crédito ICPCLP", "Descripción": "Alta y Devengo de un Crédito ICPCLP", "Status": "⚠️"},
     {"Nombre": "Swap ICPCLP", "Descripción": "Alta y Valorización de un Swap ICPCLP", "Status": "✅ ⚠️"},
     {"Nombre": "CCS Fija CLF vs ICPCLP", "Descripción": "Alta y Valorización de un CCS CLFCLP Estándar",
@@ -34,4 +39,4 @@ roadmap = [
     {"Nombre": "Sens. Swap ICPCLP", "Descripción": "Sensibilidad a la curva cero de un Swap ICPCLP", "Status": "⚠️"},
 ]
 
-st.dataframe(pd.DataFrame(roadmap), hide_index=True, use_container_width=True)
+st.dataframe(pd.DataFrame(roadmap), hide_index=True, use_container_width=True, height=500)

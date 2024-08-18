@@ -1,8 +1,9 @@
-from enum import Enum, auto
 from pydantic import NonNegativeInt, BaseModel, field_validator, validator
 from pydantic.dataclasses import dataclass
 from datetime import datetime
+from enum import Enum, auto
 
+from modules import aux_functions as aux
 import qcfinancial as qcf
 
 
@@ -156,15 +157,15 @@ class StubPeriods(str, Enum):
         return self.value.replace(" ", "-")
 
 
-class YearFraction(Enum):
+class YearFraction(str, Enum):
     """
     Identifica las distintas fracciones de año disponibles en `qcfinancial`.
     """
 
-    ACT30 = auto()
-    ACT360 = auto()
-    ACT365 = auto()
-    YF30360 = auto()
+    ACT30 = "ACT_30"
+    ACT360 = "ACT_360"
+    ACT365 = "ACT_365"
+    YF30360 = "30_360"
 
     def as_qcf(self) -> qcf.QCYearFraction:
         """
@@ -180,14 +181,14 @@ class YearFraction(Enum):
         return switcher[self]()
 
 
-class WealthFactor(Enum):
+class WealthFactor(str, Enum):
     """
     Identifica los distintos factores de capitalización disponibles en `qcfinancial`.
     """
 
-    COM = auto()
-    LIN = auto()
-    CON = auto()
+    COM = "COMPOUNDED"
+    LIN = "LINEAR"
+    CON = "CONTINUOUS"
 
     def as_qcf(self) -> qcf.QCWealthFactor:
         """
@@ -273,7 +274,7 @@ class TypeOfRate(str, Enum):
                 WealthFactor.CON.as_qcf(),
             ),
         }
-        return switcher[self.value]
+        return switcher[self]
 
     def as_qcf_with_value(self, rate_value: float):
         """
@@ -317,6 +318,139 @@ class AP(str, Enum):
             return qcf.RecPay.PAY
 
 
+class InterestRateIndex(str, Enum):
+    """
+    Representa los índices de tasa de interés disponibles en Front Desk.
+    """
+
+    EURIBOR6M = "EURIBOR6M"
+    SOFRINDX = "SOFRINDX"
+    SOFRRATE = "SOFRRATE"
+    ICPCLP = "ICPCLP"
+    ICPCLF = "ICPCLF"
+    TERMSOFR1M = "TERMSOFR1M"
+    TERMSOFR3M = "TERMSOFR3M"
+    TERMSOFR6M = "TERMSOFR6M"
+    TERMSOFR1Y = "TERMSOFR1Y"
+    CESTRON = "CESTRON"
+    SARON = "SARON"
+
+    def as_qcf(self,) -> qcf.InterestRateIndex | str:
+        """
+        Retorna `self` en formato `Qcf.InterestRateIndex`.
+        """
+        lin_act360 = TypeOfRate.LINACT360.as_qcf()
+        usd = Currency("USD").as_qcf()
+        clp = Currency("CLP").as_qcf()
+        clf = Currency("CLF").as_qcf()
+        eur = Currency("EUR").as_qcf()
+
+        switcher = {
+            "EURIBOR6M": qcf.InterestRateIndex(
+                "EURIBOR6M",
+                lin_act360,
+                qcf.Tenor("2d"),
+                qcf.Tenor("6m"),
+                ECB := aux.get_business_calendar('ECB', range(2024, 2035)),
+                ECB,
+                eur,
+            ),
+            "SOFRRATE": qcf.InterestRateIndex(
+                "SOFRRATE",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                NEW_YORK := aux.get_business_calendar('US', range(2024, 2035)),
+                NEW_YORK,
+                usd,
+            ),
+            "CESTRON": qcf.InterestRateIndex(
+                "CESTRON",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                ECB,
+                ECB,
+                eur,
+            ),
+            "SARON": qcf.InterestRateIndex(
+                "SARON",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                ECB,
+                ECB,
+                eur,
+            ),
+            "SOFRINDX": qcf.InterestRateIndex(
+                "SOFRINDX",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                NEW_YORK,
+                NEW_YORK,
+                usd,
+            ),
+            "ICPCLP": qcf.InterestRateIndex(
+                "ICPCLP",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                SANTIAGO := aux.get_business_calendar('CL', range(2024, 2035)),
+                SANTIAGO,
+                clp,
+            ),
+            "ICPCLF": qcf.InterestRateIndex(
+                "ICPCLF",
+                lin_act360,
+                qcf.Tenor("0d"),
+                qcf.Tenor("1d"),
+                SANTIAGO,
+                SANTIAGO,
+                clp,
+            ),
+            "TERMSOFR1M": qcf.InterestRateIndex(
+                "TERMSOFR1M",
+                lin_act360,
+                qcf.Tenor("2d"),
+                qcf.Tenor("1m"),
+                NEW_YORK,
+                NEW_YORK,
+                usd,
+            ),
+            "TERMSOFR3M": qcf.InterestRateIndex(
+                "TERMSOFR3M",
+                lin_act360,
+                qcf.Tenor("2d"),
+                qcf.Tenor("3m"),
+                NEW_YORK,
+                NEW_YORK,
+                usd,
+            ),
+            "TERMSOFR6M": qcf.InterestRateIndex(
+                "TERMSOFR6M",
+                lin_act360,
+                qcf.Tenor("2d"),
+                qcf.Tenor("6m"),
+                NEW_YORK,
+                NEW_YORK,
+                usd,
+            ),
+            "TERMSOFR1Y": qcf.InterestRateIndex(
+                "TERMSOFR1Y",
+                lin_act360,
+                qcf.Tenor("2d"),
+                qcf.Tenor("1y"),
+                NEW_YORK,
+                NEW_YORK,
+                usd,
+            ),
+        }
+
+        return switcher.get(self.value, self.value)
+
+
+
 class DatesForEquivalentRate(str, Enum):
     """
     Envuelve en análogo class enum de qcfinancial que indica si el cálculo de la tasa equivalente en un
@@ -334,6 +468,17 @@ class DatesForEquivalentRate(str, Enum):
             return qcf.DatesForEquivalentRate.ACCRUAL
         else:
             return qcf.DatesForEquivalentRate.INDEX
+
+
+class FxFixingLagPivot(str, Enum):
+    END_DATE = "END_DATE"
+    SETTLEMENT_DATE = "SETTLEMENT_DATE"
+
+    def as_qcf(self):
+        if self == FxFixingLagPivot.END_DATE:
+            return qcf.FxFixingLagPivot.END_DATE
+        else:
+            return qcf.FxFixingLagPivot.SETTLEMENT_DATE
 
 
 class FXRate(str, Enum):
@@ -461,15 +606,6 @@ class Tenor:
         return self.__str__()
 
 
-def build_tenor_from_str(tenor: str) -> Tenor:
-    ten = qcf.Tenor(tenor)
-    return Tenor(
-        dias=ten.get_days(),
-        meses=ten.get_months(),
-        agnos=ten.get_years(),
-    )
-
-
 class Fecha(BaseModel):
     fecha: str
 
@@ -492,6 +628,15 @@ class Fecha(BaseModel):
 
     def __hash__(self):
         return hash(self.fecha)
+
+
+def build_tenor_from_str(tenor: str) -> Tenor:
+    ten = qcf.Tenor(tenor)
+    return Tenor(
+        dias=ten.get_days(),
+        meses=ten.get_months(),
+        agnos=ten.get_years(),
+    )
 
 
 def get_end_date(start_date: Fecha, tenor: Tenor) -> Fecha:

@@ -56,3 +56,48 @@ def get_business_calendar(which_holidays: str, years: range) -> qcf.BusinessCale
                 d = d.add_days(-2)
             qcf_cal.add_holiday(d)
     return qcf_cal
+
+
+def date_plus_tenor(fecha: qcf.QCDate, tenor: qcf.Tenor) -> qcf.QCDate:
+    return fecha.add_months(tenor.get_years() * 12 + tenor.get_months()).add_days(tenor.get_days())
+
+
+def get_fx_rate_index(fx_rate_index_name: str) -> qcf.FXRateIndex:
+    match fx_rate_index_name:
+        case "USDOBS":
+            usd = qcf.QCUSD()
+            clp = qcf.QCCLP()
+            usdclp = qcf.FXRate(usd, clp)
+            one_d = qcf.Tenor('1D')
+            indice = qcf.FXRateIndex(
+                usdclp,
+                'USDOBS',
+                one_d,
+                one_d,
+                get_business_calendar('CL', range(2024, 2035))
+            )
+        case "UF":
+            clf = qcf.QCCLF()
+            clp = qcf.QCCLP()
+            clfclp = qcf.FXRate(clf, clp)
+            zero_d = qcf.Tenor('0D')
+            indice = qcf.FXRateIndex(
+                clfclp,
+                'UF',
+                zero_d,
+                zero_d,
+                get_business_calendar('CL', range(2024, 2035))
+            )
+        case _:
+            usd = qcf.QCUSD()
+            clp = qcf.QCCLP()
+            usdclp = qcf.FXRate(usd, clp)
+            one_d = qcf.Tenor('1D')
+            indice = qcf.FXRateIndex(
+                usdclp,
+                'USDOBS',
+                one_d,
+                one_d,
+                get_business_calendar('CL', range(2024, 2035))
+            )
+    return indice
