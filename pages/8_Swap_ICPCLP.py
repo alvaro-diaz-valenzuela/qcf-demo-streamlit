@@ -40,7 +40,7 @@ both_default_values = {
 }
 
 icpclp_default_values = {
-    "stub_period": qcf.StubPeriod.NO,
+    "settlement_stub_period": qcf.StubPeriod.NO,
     "fix_adj_rule": qcf.BusyAdjRules.MODFOLLOW,
     "fixing_calendar": qcf.BusinessCalendar(trade_date, 20),
     "dates_for_eq_rate": qcf.DatesForEquivalentRate.ACCRUAL,

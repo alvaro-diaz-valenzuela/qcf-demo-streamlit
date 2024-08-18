@@ -70,19 +70,6 @@ sofr = qcf.InterestRateIndex(
     usd
 )
 
-icpclp_default_values = {
-    "notional_currency": qcf.QCCLP(),
-    "stub_period": qcf.StubPeriod.NO,
-    "fix_adj_rule": qcf.BusyAdjRules.MODFOLLOW,
-    "fixing_calendar": calendarios['SANTIAGO'],
-    "dates_for_eq_rate": qcf.DatesForEquivalentRate.ACCRUAL,
-    "interest_rate": qcf.QCInterestRate(.0, qcf.QCAct360(), qcf.QCLinearWf()),
-    "eq_rate_decimal_places": 4,
-    "gearing": 1.0,
-}
-
-# Fin valores por default
-
 tenors = ['6M', '1Y', '18M'] + [f"{n}Y" for n in range(2, 11)]
 tenors += ['12Y', '15Y', '20Y', '25Y', '30Y']
 
@@ -197,7 +184,7 @@ interest_sofr_default_values = {
     "lookback": 0,
     "lockout": 0,
     "interest_rate_index": sofr,
-    "cashflow_is_amort": False,
+    "amort_is_cashflow": False,
     "interest_rate": qcf.QCInterestRate(0.0, qcf.QCAct360(), qcf.QCLinearWf()),
 }
 
@@ -235,7 +222,7 @@ interest_icp_default_values = {
     "dates_for_eq_rate": qcf.DatesForEquivalentRate.ACCRUAL,
     "fix_adj_rule": qcf.BusyAdjRules.MODFOLLOW,
     "amort_is_cashflow": False,
-    "stub_period": qcf.StubPeriod.NO,
+    "settlement_stub_period": qcf.StubPeriod.NO,
     "index_name": "ICPCLP",
 }
 
